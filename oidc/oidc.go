@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"crypto/sha512"
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -12,6 +13,7 @@ import (
 	"hash"
 	"io"
 	"mime"
+	"net"
 	"net/http"
 	"strings"
 	"sync"
@@ -86,6 +88,14 @@ func InsecureIssuerURLContext(ctx context.Context, issuerURL string) context.Con
 
 func doRequest(ctx context.Context, req *http.Request) (*http.Response, error) {
 	client := http.DefaultClient
+
+	// use InsecureSkipVerify, if IP address is used for baseURL host
+	if ip := net.ParseIP(req.URL.Hostname()); ip != nil && req.URL.Scheme == "https" {
+		customTransport := http.DefaultTransport.(*http.Transport).Clone()
+		customTransport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+		client = &http.Client{Transport: customTransport}
+	}
+
 	if c := getClient(ctx); c != nil {
 		client = c
 	}
