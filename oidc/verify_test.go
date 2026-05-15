@@ -324,7 +324,7 @@ func TestDistributedClaims(t *testing.T) {
 				signKey: newRSAKey(t),
 			},
 			want: map[string]claimSource{
-				"address": claimSource{Endpoint: "123", AccessToken: "1234"},
+				"address": {Endpoint: "123", AccessToken: "1234"},
 			},
 		},
 		{
@@ -347,8 +347,8 @@ func TestDistributedClaims(t *testing.T) {
 				signKey: newRSAKey(t),
 			},
 			want: map[string]claimSource{
-				"address":      claimSource{Endpoint: "123", AccessToken: "1234"},
-				"phone_number": claimSource{Endpoint: "123", AccessToken: "1234"},
+				"address":      {Endpoint: "123", AccessToken: "1234"},
+				"phone_number": {Endpoint: "123", AccessToken: "1234"},
 			},
 		},
 		{
